@@ -60,6 +60,7 @@ def test_pom_cart_item_removal(page: Page):
     assert not cart_page.is_item_in_cart(item1)
     assert cart_page.is_item_in_cart(item2)
 
+@pytest.mark.xfail(reason="Intentional failure test case to demonstrate conftest failure hook capturing screenshots and traces")
 def test_forced_failure_for_artifact_capture(page: Page):
     """Intentional failure test case to demonstrate conftest failure hook capturing screenshots and traces."""
     login_page = LoginPage(page)
