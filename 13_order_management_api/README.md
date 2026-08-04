@@ -49,6 +49,19 @@ uv run pytest 13_order_management_api/test_order_mgmt.py -k "test_ui_search_stat
 uv run pytest 13_order_management_api/test_order_mgmt.py -v
 ```
 
+### Standalone Server Execution
+
+To launch the FastAPI application server individually for manual web exploration:
+
+```bash
+uv run uvicorn 13_order_management_api.server:app --reload --port 8000
+```
+Once started, open your browser and navigate to:
+- **Interactive Web Portal**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- **API Health Check**: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
+- **Interactive OpenAPI Specs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
+
 ---
 
 ## Parameter References & Test Data Design

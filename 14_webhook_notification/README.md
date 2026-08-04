@@ -52,6 +52,19 @@ uv run pytest 14_webhook_notification/test_webhook_notification.py -k "test_ui_n
 uv run pytest 14_webhook_notification/ --html=report.html --self-contained-html
 ```
 
+### Standalone Server Execution
+
+To launch the FastAPI application server individually for manual web exploration:
+
+```bash
+uv run uvicorn 14_webhook_notification.server:app --reload --port 8000
+```
+Once started, open your browser and navigate to:
+- **Interactive Web Portal**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- **API Health Check**: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
+- **Interactive OpenAPI Specs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
+
 ---
 
 ## Fixture & Parameter References

@@ -43,6 +43,19 @@ uv run pytest 12_travel_booking/test_travel_booking.py -k "test_booking_validati
 uv run pytest 12_travel_booking/
 ```
 
+### Standalone Server Execution
+
+To launch the FastAPI application server individually for manual web exploration:
+
+```bash
+uv run uvicorn 12_travel_booking.server:app --reload --port 8000
+```
+Once started, open your browser and navigate to:
+- **Interactive Web Portal**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- **API Health Check**: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
+- **Interactive OpenAPI Specs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
+
 ---
 
 ## Parameter & Locator Reference
