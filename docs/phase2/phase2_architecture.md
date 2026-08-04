@@ -1,0 +1,144 @@
+# Architecture Specification: Playwright Python Lab - Phase 2
+
+This document defines the high-level architecture, design patterns, infrastructure, and directory layout for Phase 2 (Projects 11 to 20) of the Playwright Python Lab.
+
+---
+
+## 1. Directory Structure
+
+Phase 2 builds upon the mono-repo structure by introducing 10 advanced subprojects (`11_role_based_portal` through `20_ai_assisted_framework`). Each subproject is self-contained with its dedicated test scripts, test data assets, and parameter documentation.
+
+```text
+ai_playwright_lab/
+├── pyproject.toml              # Project configuration and uv dependencies
+├── uv.lock                    # Dependency lockfile
+├── docs/                      # Global documentation suite
+│   ├── req.md                 # Phase 1 Requirements
+│   ├── architecture.md        # Phase 1 Architecture
+│   ├── plan.md                # Phase 1 Roadmap
+│   ├── phase2_req.md          # Phase 2 Requirements
+│   ├── phase2_architecture.md # [This File] Phase 2 Architecture specification
+│   └── phase2_plan.md         # Phase 2 Implementation roadmap
+│
+├── 11_role_based_portal/         # Subproject 11: Role-Based Employee Management Portal
+│   ├── README.md
+│   └── test_role_portal.py
+│
+├── 12_travel_booking/            # Subproject 12: End-to-End Travel Booking Flow
+│   ├── README.md
+│   └── test_travel_booking.py
+│
+├── 13_order_management_api/      # Subproject 13: Order Management with API Setup
+│   ├── README.md
+│   └── test_order_mgmt.py
+│
+├── 14_webhook_notification/      # Subproject 14: Webhook and Notification Validation
+│   ├── README.md
+│   └── test_webhook_notification.py
+│
+├── 15_file_import_reports/        # Subproject 15: Multi-File Import & Error Report Validation
+│   ├── README.md
+│   ├── valid_records.csv
+│   ├── invalid_records.csv
+│   └── test_file_import.py
+│
+├── 16_mock_dependency_failures/  # Subproject 16: Mock External Dependency Failures
+│   ├── README.md
+│   └── test_mock_failures.py
+│
+├── 17_responsive_cross_browser/  # Subproject 17: Responsive Cross-Browser Regression Suite
+│   ├── README.md
+│   └── test_responsive.py
+│
+├── 18_visual_regression/         # Subproject 18: Visual Regression Testing for Key Screens
+│   ├── README.md
+│   ├── snapshots/
+│   └── test_visual.py
+│
+├── 19_payment_lifecycle/         # Subproject 19: Payment Transaction Lifecycle Simulation
+│   ├── README.md
+│   └── test_payment_lifecycle.py
+│
+└── 20_ai_assisted_framework/     # Subproject 20: AI-Assisted Test Automation Framework
+    ├── README.md
+    ├── conftest.py
+    ├── pytest.ini
+    ├── pages/
+    │   ├── base_page.py
+    │   ├── login_page.py
+    │   ├── checkout_page.py
+    │   └── dashboard_page.py
+    ├── data/
+    │   └── ai_generated_dataset.json
+    └── tests/
+        └── test_ai_framework.py
+```
+
+---
+
+## 2. Infrastructure & Execution Architecture
+
+### Extended Package Toolchain (`uv`)
+- **Virtual Environment**: All Phase 2 subprojects execute within the centralized `uv` environment.
+- **Dependency Extensions**:
+  - `pytest-playwright`: Playwright fixture binding and execution options.
+  - `pytest-html`: Self-contained HTML report creation for framework runs.
+  - `pillow`: Screenshot masking and image inspection support.
+
+### Execution Invocation Pattern
+All subproject execution is invoked through `uv run pytest`, ensuring environment isolation and standard CLI option processing across headless/headed modes and cross-browser matrices:
+```bash
+uv run pytest 11_role_based_portal/
+uv run pytest 17_responsive_cross_browser/ --browser=all
+uv run pytest 20_ai_assisted_framework/tests/ --html=report.html --self-contained-html
+```
+
+---
+
+## 3. Design Patterns & Advanced Architecture Principles
+
+### 1. Role-Based Context Isolation & Permission Assertions
+*Applied in: Project 11.*
+- **Context Separation**: Uses distinct `BrowserContext` instances (`Admin Context` vs. `Employee Context`) within a single test execution to isolate user session cookies and local storage.
+- **RBAC Assertions**: Validates active UI elements against role-based access rules without cookie leakages between roles.
+
+### 2. Multi-Step State Machine & Dynamic Pricing Validation
+*Applied in: Projects 12 & 19.*
+- **Lifecycle Assertions**: Validates complex state transitions (Initiate -> Authorize -> Hold -> Complete -> Refund) across multi-page workflows.
+- **Dynamic Math Integrity**: Validates pricing alterations, taxes, and balance ledger calculations in real-time during user flows.
+
+### 3. API Data Seeding & Cross-Validation Engine
+*Applied in: Project 13.*
+- **Pre-Test Seeding**: Uses Playwright's `APIRequestContext` to execute fast REST API data setup before UI interaction.
+- **Post-Test Verification & Teardown**: Validates UI status updates via backend GET API calls and cleans up test records using DELETE API calls.
+
+### 4. Asynchronous Network & Webhook Event Interception
+*Applied in: Project 14.*
+- **Network Interception**: Intercepts outbound HTTP POST requests generated by the application.
+- **Webhook Assertion**: Validates asynchronous event payloads and checks in-app toast notification elements.
+
+### 5. File Stream & Report Download Architecture
+*Applied in: Project 15.*
+- **Multi-File Uploads**: Handles single/batch file upload inputs via Playwright `set_input_files`.
+- **Download Interception**: Captures download events (`page.expect_download()`), writes files to temporary directories, and parses content to verify error reporting logs.
+
+### 6. Failure Injection via Network Route Interception
+*Applied in: Project 16.*
+- **`page.route()` Interception**: Intercepts outgoing API routes and injects simulated server errors (HTTP 500), delays (5000ms latency), and abort signals.
+- **Resilience Testing**: Verifies frontend resilience, loading indicators, and graceful fallback UI alerts.
+
+### 7. Multi-Viewport & Cross-Engine Matrix Architecture
+*Applied in: Project 17.*
+- **Device Emulation**: Configures test parameters across Desktop Chromium, Firefox, WebKit, and mobile viewport profiles (`iPhone 13`, `Pixel 5`).
+- **Layout Verification**: Validates responsive components (drawers, toggles, hamburger menus) across screen size viewports.
+
+### 8. Visual Snapshot Comparison & Dynamic Masking
+*Applied in: Project 18.*
+- **Snapshot Baselines**: Employs `expect(page).to_have_screenshot()` for pixel-diff comparison.
+- **Dynamic Element Masking**: Masks dynamic UI regions (timestamps, session tokens, dynamic banners) to eliminate false positives.
+
+### 9. Scalable Enterprise AI-Assisted POM Framework Architecture
+*Applied in: Project 20.*
+- **Modular POM**: Implements clean Page Object abstractions (`LoginPage`, `DashboardPage`, `CheckoutPage`).
+- **AI-Generated Dataset Integration**: Integrates AI-generated positive, boundary, edge-case, and negative test data vectors.
+- **Automated Reporting & Tracing**: Integrates custom Pytest hooks for zip execution traces and self-contained HTML execution reports.
