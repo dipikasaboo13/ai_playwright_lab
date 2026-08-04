@@ -1,0 +1,6 @@
+id,name,email,role,salary
+EMP001,Alice Smith,alice@example.com,Developer,85000
+EMP001,Duplicate User,dup@example.com,Tester,60000
+EMP005,Invalid Email,notanemail,Analyst,70000
+,Missing ID,missingid@example.com,Developer,80000
+EMP007,Negative Salary,salary@example.com,Developer,-50000

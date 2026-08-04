@@ -1,0 +1,4 @@
+id,name,email,role,salary
+EMP001,Alice Smith,alice@example.com,Developer,85000
+EMP002,Bob Jones,bob@example.com,Designer,75000
+EMP003,Charlie Brown,charlie@example.com,Manager,95000
