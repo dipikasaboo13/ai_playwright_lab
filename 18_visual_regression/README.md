@@ -33,6 +33,20 @@ The subproject includes a dedicated FastAPI application (`server.py`) serving ke
   uv run pytest 18_visual_regression/test_visual.py --html=report.html --self-contained-html
   ```
 
+### Standalone Server Execution
+
+To launch the FastAPI application server individually for manual web exploration:
+
+```bash
+uv run uvicorn 18_visual_regression.server:app --reload --port 8000
+```
+Once started, open your browser and navigate to:
+- **Dashboard**: [http://127.0.0.1:8000/dashboard](http://127.0.0.1:8000/dashboard)
+- **Checkout**: [http://127.0.0.1:8000/checkout](http://127.0.0.1:8000/checkout)
+- **API Health Check**: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
+- **Interactive OpenAPI Specs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
+
 ## Key Parameter Reference & Fixtures
 
 | Parameter / Fixture | Description |
