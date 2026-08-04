@@ -28,7 +28,7 @@ def pytest_runtest_makereport(item, call):
 
         test_name = item.name.replace("[", "_").replace("]", "_").replace(" ", "_")
 
-        if report.failed:
+        if report.failed or hasattr(report, "wasxfail"):
             screenshots_dir.mkdir(parents=True, exist_ok=True)
             traces_dir.mkdir(parents=True, exist_ok=True)
 
