@@ -3,7 +3,17 @@ import pytest
 from pathlib import Path
 
 # Ensure 09_mini_test_framework folder is in python path
-sys.path.insert(0, str(Path(__file__).parent))
+project_dir = Path(__file__).parent.resolve()
+sys.path.insert(0, str(project_dir))
+
+# Clear stale module cache entries (e.g. 'pages', 'utils', 'config') from other subprojects
+for mod_name in list(sys.modules.keys()):
+    if mod_name in ("pages", "utils", "config") or mod_name.startswith(("pages.", "utils.", "config.")):
+        mod = sys.modules.get(mod_name)
+        if mod and hasattr(mod, "__file__") and mod.__file__:
+            if not str(Path(mod.__file__).resolve()).startswith(str(project_dir)):
+                del sys.modules[mod_name]
+
 
 @pytest.fixture(autouse=True)
 def enable_tracing(context):

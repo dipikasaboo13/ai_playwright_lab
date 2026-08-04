@@ -13,3 +13,9 @@ dependencies = [
     "python-multipart>=0.0.32",
     "uvicorn>=0.52.1",
 ]
+[tool.pytest.ini_options]
+markers = [
+    "smoke: Smoke test suite",
+    "regression: Regression test suite",
+    "ai_generated: AI generated test matrix",
+]

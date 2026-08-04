@@ -6,17 +6,12 @@ Validates outbound HTTP POST webhook network interception, JSON payload validati
 
 import socket
 import time
-import threading
+import subprocess
 import sys
 from pathlib import Path
 import urllib.request
 import pytest
-import uvicorn
 from playwright.sync_api import Page, Playwright, expect
-
-# Ensure subproject directory is in sys.path to import local server module
-sys.path.insert(0, str(Path(__file__).parent))
-import server
 
 
 def get_free_port() -> int:
@@ -33,27 +28,43 @@ def server_url():
     Polls the server's /health endpoint until active, and gracefully shuts it down after test completion.
     """
     port = get_free_port()
-    config = uvicorn.Config(server.app, host="127.0.0.1", port=port, log_level="error")
-    uv_server = uvicorn.Server(config)
+    host = "127.0.0.1"
+    base_url = f"http://{host}:{port}"
+    subproject_dir = Path(__file__).parent.resolve()
 
-    thread = threading.Thread(target=uv_server.run, daemon=True)
-    thread.start()
+    proc = subprocess.Popen(
+        [
+            sys.executable, "-m", "uvicorn",
+            "server:app",
+            "--host", host,
+            "--port", str(port),
+            "--log-level", "error"
+        ],
+        cwd=str(subproject_dir)
+    )
 
-    url = f"http://127.0.0.1:{port}"
-
-    # Poll /health endpoint to ensure web server is fully initialized before running tests
     start_time = time.time()
+    server_ready = False
     while time.time() - start_time < 5.0:
         try:
-            with urllib.request.urlopen(f"{url}/health") as resp:
+            with urllib.request.urlopen(f"{base_url}/health") as resp:
                 if resp.status == 200:
+                    server_ready = True
                     break
         except Exception:
             time.sleep(0.1)
 
-    yield url
+    if not server_ready:
+        proc.kill()
+        pytest.fail(f"FastAPI server failed to start at {base_url}")
 
-    uv_server.should_exit = True
+    yield base_url
+
+    proc.terminate()
+    try:
+        proc.wait(timeout=3)
+    except subprocess.TimeoutExpired:
+        proc.kill()
 
 
 def test_webhook_payload(page: Page, server_url: str):
