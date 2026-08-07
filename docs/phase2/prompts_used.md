@@ -25,3 +25,13 @@ Use the format similar to [executable_plan.md](ai_playwright_lab/docs/executable
 
 Update the AGENTS.md file based on [executable_plan.md](docs/executable_plan.md) file. 
 Keep only the content which you think would be required before starting any task. Expectations would be keep generic info which can be used across tasks/ project.
+
+------------------
+
+for all the projects, if we are spawning our own servers, then add a command in respective readme files on how to spawn
+that server individually. Currently its auto starting and stopping as part of test run. That is still required, but for
+exploration of what exactly server looks like, I need to spin up server individually to explore it further.
+
+------------------
+
+

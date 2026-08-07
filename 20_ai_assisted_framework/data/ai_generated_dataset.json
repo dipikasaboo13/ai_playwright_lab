@@ -1,0 +1,149 @@
+{
+  "framework_meta": {
+    "version": "1.0.0",
+    "generated_by": "AI-Assistant-Generator",
+    "description": "Structured AI test cases matrix covering positive, negative, boundary, and exception scenarios."
+  },
+  "test_cases": [
+    {
+      "id": "POS-001",
+      "category": "positive",
+      "feature": "login",
+      "description": "Valid admin user authentication",
+      "input": {
+        "username": "admin",
+        "password": "admin123"
+      },
+      "expected": {
+        "should_succeed": true,
+        "redirect_url_contains": "/dashboard",
+        "welcome_user": "admin"
+      }
+    },
+    {
+      "id": "POS-002",
+      "category": "positive",
+      "feature": "login",
+      "description": "Valid standard user authentication",
+      "input": {
+        "username": "john_doe",
+        "password": "password123"
+      },
+      "expected": {
+        "should_succeed": true,
+        "redirect_url_contains": "/dashboard",
+        "welcome_user": "john_doe"
+      }
+    },
+    {
+      "id": "POS-003",
+      "category": "positive",
+      "feature": "checkout",
+      "description": "Valid promo code AI20 application",
+      "input": {
+        "promo_code": "AI20"
+      },
+      "expected": {
+        "should_succeed": true,
+        "discount_amount": "-$60.00",
+        "total_amount": "$240.00"
+      }
+    },
+    {
+      "id": "NEG-001",
+      "category": "negative",
+      "feature": "login",
+      "description": "Invalid password for existing user",
+      "input": {
+        "username": "admin",
+        "password": "wrongpassword"
+      },
+      "expected": {
+        "should_succeed": false,
+        "error_message": "Invalid username or password."
+      }
+    },
+    {
+      "id": "NEG-002",
+      "category": "negative",
+      "feature": "login",
+      "description": "Non-existent username",
+      "input": {
+        "username": "ghost_user",
+        "password": "somepassword"
+      },
+      "expected": {
+        "should_succeed": false,
+        "error_message": "Invalid username or password."
+      }
+    },
+    {
+      "id": "NEG-003",
+      "category": "negative",
+      "feature": "checkout",
+      "description": "Invalid promo code submission",
+      "input": {
+        "promo_code": "EXPIRED99"
+      },
+      "expected": {
+        "should_succeed": false,
+        "error_message": "Invalid promo code: EXPIRED99"
+      }
+    },
+    {
+      "id": "BND-001",
+      "category": "boundary",
+      "feature": "login",
+      "description": "Whitespace padding in username field",
+      "input": {
+        "username": " admin ",
+        "password": "admin123"
+      },
+      "expected": {
+        "should_succeed": false,
+        "error_message": "Invalid username or password."
+      }
+    },
+    {
+      "id": "BND-002",
+      "category": "boundary",
+      "feature": "checkout",
+      "description": "100% discount promo code SUPER100 boundary condition",
+      "input": {
+        "promo_code": "SUPER100"
+      },
+      "expected": {
+        "should_succeed": true,
+        "discount_amount": "-$300.00",
+        "total_amount": "$0.00"
+      }
+    },
+    {
+      "id": "EXC-001",
+      "category": "exception",
+      "feature": "login",
+      "description": "SQL injection vector in username input",
+      "input": {
+        "username": "' OR '1'='1",
+        "password": "' OR '1'='1"
+      },
+      "expected": {
+        "should_succeed": false,
+        "error_message": "Invalid username or password."
+      }
+    },
+    {
+      "id": "EXC-002",
+      "category": "exception",
+      "feature": "search",
+      "description": "XSS script snippet injection in search input",
+      "input": {
+        "query": "<script>alert('xss')</script>"
+      },
+      "expected": {
+        "should_succeed": true,
+        "escaped_output": "<script>alert('xss')</script>"
+      }
+    }
+  ]
+}
